@@ -21,6 +21,7 @@ class View extends JPanel {
 		Iterator<Sprite> SLI = model.SL.iterator();
 		while (SLI.hasNext()) {
 			Sprite current = SLI.next();
+			// drawsies
 			g.drawImage(current.getImage(), current.pos_x, current.pos_y, null);
 		}
 	}

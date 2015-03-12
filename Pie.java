@@ -28,17 +28,10 @@ class Pie extends Sprite {
 	}
 	
 	void update() {
-		if (this.pos_y < FLOOR) {
+		if (this.pos_y < 800) {
 			this.pos_y += v_velocity;
 			this.v_velocity += GRAVITY;
 			this.pos_x += velocity;
-		}
-		else {
-			this.pos_y = FLOOR;
-			this.v_velocity = 0.0;
-		}
-		
-		
-		
+		}		
 	}
 }

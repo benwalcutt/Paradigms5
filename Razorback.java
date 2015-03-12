@@ -7,19 +7,25 @@ import java.awt.Graphics;
 import java.io.File;
 
 class Razorback extends Sprite {
-	
-	//public static Image image = null;
 
 	public final int w_offset = 101;
 	final int h_offset = 45;
 	double v_velocity;
 	static Image image = null;
+	static Image jumpimage = null;
+	static Image fallimage = null;
 	
 	Razorback() throws IOException {
 		if (this.image == null) {
 			this.image = ImageIO.read(new File("razorback.png"));
 		}
-		this.velocity = 1.0;
+		if (this.jumpimage == null) {
+			this.jumpimage = ImageIO.read(new File("razorjump.png"));
+		}
+		if (this.fallimage == null) {
+			this.fallimage = ImageIO.read(new File("razorfall.png"));
+		}
+		this.velocity = 5.0;
 		this.v_velocity = 0.0;
 		this.pos_x = 0;
 		this.pos_y = FLOOR;
@@ -28,29 +34,27 @@ class Razorback extends Sprite {
 	}
 	
 	public Image getImage() {
-		return this.image;
-	}
-	
-	void update() {
-		try {
 		if (this.v_velocity < 0) {
-			this.image = ImageIO.read(new File("razorjump.png"));
+			return this.jumpimage;
 		}
 		else if (this.v_velocity > 0) {
-			this.image = ImageIO.read(new File("razorfall.png"));
+			return this.fallimage;
 		}
 		else {
-			this.image = ImageIO.read(new File("razorback.png"));
+			return this.image;
 		}
-		}
-		catch (IOException e) {
-			// well....
-		}
-		
+	}
+	
+	void update() {	
+		// move the pig
 		if (this.pos_x < Model.dest_x) {
 			this.pos_x += velocity;
 			if (this.pos_x > 1000) {
 				this.pos_x = 1000 - w_offset;
+			}
+			// stop the shaking by assuming we JUST passed the destination so move directly to it
+			if (this.pos_x > Model.dest_x) {
+				this.pos_x = Model.dest_x;
 			}
 		}
 		else if (this.pos_x > Model.dest_x) {
@@ -58,8 +62,13 @@ class Razorback extends Sprite {
 			if (this.pos_x < 0) {
 				this.pos_x = 0;
 			}
+			// same as before, stop the shaking
+			if (this.pos_x < Model.dest_x) {
+				this.pos_x = Model.dest_x;
+			}
 		}
 		
+		// the controller said to jump, and we are on the floor so we jump
 		if (Model.jump == true && this.pos_y >= FLOOR) {
 			this.v_velocity = -30.0;
 			
@@ -68,9 +77,11 @@ class Razorback extends Sprite {
 		this.pos_y += this.v_velocity;
 		this.v_velocity += GRAVITY;
 		
+		// we hit the floor, stop jumping
 		if (this.pos_y >= FLOOR) {
 			v_velocity = 0.0;
 			this.pos_y = FLOOR;
+			// let the model know we stopped jumping
 			Model.jump = false;
 		}
 	}

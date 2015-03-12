@@ -12,7 +12,7 @@ class Model
 	public ArrayList<Sprite> SL;
 	public static int dropcounter;
 	public static int dest_x;
-	public static int dest_y;
+	
 	public static boolean jump;
 	public static boolean flying;
 	
@@ -21,7 +21,6 @@ class Model
 	Model() throws IOException {
 		dropcounter = 0;
 		dest_x = 0;
-		dest_y = 0;
 		SL = new ArrayList<Sprite>();
 		razorback = new Razorback();
 		SL.add(razorback);
@@ -31,14 +30,20 @@ class Model
 	
 
 	public void update() throws IOException {
+		// keep track of time to drop the turts
 		dropcounter++;
-		if (dropcounter == 100) {
+		if (dropcounter == 25) {
 			SL.add(new Turtle());
 			dropcounter = 0;
 		}
 		
+		// if controller said he was flying, that means the button was clicked
+		// and they want some pie
+		// let them eat their pie
 		if (flying == true) {
 			SL.add(new Pie());
+			// reset the flying flag so that we can throw more pie and also not vomit pie everywhere
+			// if you want to see the pig vomit pie, comment this next line out
 			flying = false;
 		}		
 		
@@ -46,13 +51,12 @@ class Model
 		while (SLIter.hasNext()) {
 			Sprite current = SLIter.next();
 			current.update();
-			if (current.pos_x < -150) {
+			// bounds testing
+			if (current.pos_x < -150 || current.pos_x > 1000 || current.pos_y > 800) {
 				SLIter.remove();
 			}
-			if (current.pos_x > 1000) {
-				SLIter.remove();
-			}
-			if (current.flat_count == 100 && current.flat == true) {
+			// flat turts
+			if (current.flat_count == 50 && current.flat == true) {
 				SLIter.remove();
 			}
 		}

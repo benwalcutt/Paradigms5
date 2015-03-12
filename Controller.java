@@ -9,14 +9,19 @@ class Controller implements MouseListener
 		this.model = m;
 	}
 
+	// check if mouse is pressed
 	public void mousePressed(MouseEvent e) {
+		// left mouse
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			this.model.setDestination(e.getX());
 		}
+		// right mouse
 		else if (e.getButton() == MouseEvent.BUTTON3) {
+			// if he isn't already jumping, let him him
 			if (model.jump == false) {
 				model.jump = true;		
 			}
+			// else he is flying (just go with it)
 			else {
 				model.flying = true;
 			}
